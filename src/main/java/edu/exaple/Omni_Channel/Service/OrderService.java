@@ -25,30 +25,6 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Order placeOrder(Order order) {
-        Customer customer = customerRepository.findById(order.getCustomer().getId())
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
-
-        Channel channel = channelRepository.findById(order.getChannel().getId())
-                .orElseThrow(() -> new RuntimeException("Channel not found"));
-
-        order.setCustomer(customer);
-        order.setChannel(channel);
-        order.setOrderDate(LocalDateTime.now());
-
-        List<OrderItem> items = new ArrayList<>();
-        for (OrderItem item : order.getItems()) {
-            Product product = productRepository.findById(item.getProduct().getId())
-                    .orElseThrow(() -> new RuntimeException("Product not found"));
-            item.setProduct(product);
-            item.setPrice(product.getPrice());
-            item.setOrder(order);
-            items.add(item);
-        }
-        order.setItems(items);
-
-        return orderRepository.save(order);
-    }
 
     public List<Order> findAll() {
         return orderRepository.findAll();
@@ -67,4 +43,26 @@ public class OrderService {
     public void delete(Long id) {
         orderRepository.deleteById(id);
     }
+    public Order placeOrder(Order order) {
+        for (OrderItem item : order.getItems()) {
+            Product product = productRepository.findById(item.getProduct().getId())
+                    .orElseThrow(() -> new RuntimeException("Product not found with ID: " + item.getProduct().getId()));
+
+            if (product.getStock() < item.getQuantity()) {
+                throw new RuntimeException("Insufficient stock for product: " + product.getName());
+            }
+
+            // Deduct stock
+            product.setStock(product.getStock() - item.getQuantity());
+            productRepository.save(product);
+
+            item.setProduct(product); // Ensure correct reference
+            item.setPrice(product.getPrice());
+            item.setOrder(order);
+        }
+
+        order.setOrderDate(LocalDateTime.now());
+        return orderRepository.save(order);
+    }
+
 }

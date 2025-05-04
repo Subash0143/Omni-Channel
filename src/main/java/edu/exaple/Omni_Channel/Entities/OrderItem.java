@@ -16,7 +16,8 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private int quantity;
+    private double price;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="order_id")
     @JsonBackReference
@@ -25,6 +26,5 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
-    private int quantity;
-    private double price;
+
 }
