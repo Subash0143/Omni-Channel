@@ -1,32 +1,38 @@
 package edu.exaple.Omni_Channel.Controller;
 
-
-import edu.exaple.Omni_Channel.Service.CustomerService;
 import edu.exaple.Omni_Channel.Entities.Customer;
-import lombok.RequiredArgsConstructor;
+import edu.exaple.Omni_Channel.Service.CustomerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-
-@RequestMapping("/api/customers")
-
-@RequiredArgsConstructor
+@RequestMapping("/customers")
 public class CustomerController {
-    private final CustomerService customerService;
+
+    @Autowired
+    private CustomerService customerService;
 
     @PostMapping
-    public ResponseEntity<Customer> create(@RequestBody Customer customer) {
-        return ResponseEntity.ok(customerService.save(customer));
+    public Customer createCustomer(@RequestBody Customer customer) {
+        return customerService.save(customer);
     }
 
     @GetMapping
-    public ResponseEntity<List<Customer>> getAll() {
-        return ResponseEntity.ok(customerService.findAll());
+    public List<Customer> getAllCustomers() {
+        return customerService.findAll();
+    }
+
+    @PutMapping("/{id}")
+    public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
+        return customerService.update(id, updatedCustomer);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        customerService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

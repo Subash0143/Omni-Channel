@@ -3,6 +3,7 @@ package edu.exaple.Omni_Channel.Entities;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,18 +11,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="order_id")
     @JsonBackReference
     private Order order;
 
-    @ManyToOne
-
+    @ManyToOne(fetch = FetchType.EAGER)
     private Product product;
 
     private int quantity;

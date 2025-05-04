@@ -1,17 +1,16 @@
 package edu.exaple.Omni_Channel.Service;
 
-
 import edu.exaple.Omni_Channel.Entities.Customer;
 import edu.exaple.Omni_Channel.Repository.CustomerRepository;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CustomerService {
-    private final CustomerRepository customerRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public Customer save(Customer customer) {
         return customerRepository.save(customer);
@@ -19,5 +18,17 @@ public class CustomerService {
 
     public List<Customer> findAll() {
         return customerRepository.findAll();
+    }
+
+    public Customer update(Long id, Customer updatedCustomer) {
+        Customer customer = customerRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
+        customer.setName(updatedCustomer.getName());
+        customer.setEmail(updatedCustomer.getEmail());
+        return customerRepository.save(customer);
+    }
+
+    public void delete(Long id) {
+        customerRepository.deleteById(id);
     }
 }

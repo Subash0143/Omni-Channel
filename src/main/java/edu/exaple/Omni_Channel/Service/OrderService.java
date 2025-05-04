@@ -1,49 +1,70 @@
 package edu.exaple.Omni_Channel.Service;
-
-import edu.exaple.Omni_Channel.Entities.Order;
-import edu.exaple.Omni_Channel.Entities.OrderItem;
-import edu.exaple.Omni_Channel.Entities.Product;
+import edu.exaple.Omni_Channel.Entities.*;
+import edu.exaple.Omni_Channel.Repository.ChannelRepository;
+import edu.exaple.Omni_Channel.Repository.CustomerRepository;
 import edu.exaple.Omni_Channel.Repository.OrderRepository;
 import edu.exaple.Omni_Channel.Repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-@Slf4j
+
 @Service
-@RequiredArgsConstructor
 public class OrderService {
+    @Autowired
+    private OrderRepository orderRepository;
 
     @Autowired
-    private final OrderRepository orderRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    private final ProductRepository productRepository;
+    private ChannelRepository channelRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public Order placeOrder(Order order) {
-        order.setOrderDate(LocalDateTime.now());
-        order.setStatus("PENDING");
+        Customer customer = customerRepository.findById(order.getCustomer().getId())
+                .orElseThrow(() -> new RuntimeException("Customer not found"));
 
+        Channel channel = channelRepository.findById(order.getChannel().getId())
+                .orElseThrow(() -> new RuntimeException("Channel not found"));
+
+        order.setCustomer(customer);
+        order.setChannel(channel);
+        order.setOrderDate(LocalDateTime.now());
+
+        List<OrderItem> items = new ArrayList<>();
         for (OrderItem item : order.getItems()) {
             Product product = productRepository.findById(item.getProduct().getId())
                     .orElseThrow(() -> new RuntimeException("Product not found"));
-
-            if (product.getStock() < item.getQuantity())
-                throw new RuntimeException("Insufficient stock for: " + product.getName());
-
-            product.setStock(product.getStock() - item.getQuantity());
             item.setProduct(product);
-            item.setOrder(order);
             item.setPrice(product.getPrice());
+            item.setOrder(order);
+            items.add(item);
         }
+        order.setItems(items);
 
         return orderRepository.save(order);
     }
 
-    public List<Order> getAllOrders() {
+    public List<Order> findAll() {
         return orderRepository.findAll();
+    }
+
+    public Order update(Long id, Order updatedOrder) {
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+
+        order.setStatus(updatedOrder.getStatus());
+        // Additional updates can be handled here
+
+        return orderRepository.save(order);
+    }
+
+    public void delete(Long id) {
+        orderRepository.deleteById(id);
     }
 }
