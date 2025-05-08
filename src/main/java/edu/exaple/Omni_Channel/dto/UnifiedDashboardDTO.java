@@ -4,63 +4,60 @@ import java.math.BigDecimal;
 
 public class UnifiedDashboardDTO {
 
-    private long productCount;
-    private long orderCount;
-    private long customerCount;
-    private long channelCount;
-    private double totalRevenue;
+    private long totalOrders;
+    private long totalCustomers;
+    private long totalProducts;
+    private long totalChannels;
+    private BigDecimal totalRevenue;
 
-    // Default constructor
-    public UnifiedDashboardDTO(long totalOrders, long totalCustomers, long totalProducts, long totalChannels, BigDecimal totalRevenue) {
+    public UnifiedDashboardDTO() {
     }
 
-    // All-args constructor (optional)
-    public UnifiedDashboardDTO(long productCount, long orderCount, long customerCount, long channelCount, double totalRevenue) {
-        this.productCount = productCount;
-        this.orderCount = orderCount;
-        this.customerCount = customerCount;
-        this.channelCount = channelCount;
+    public UnifiedDashboardDTO(long totalOrders, long totalCustomers, long totalProducts, long totalChannels, BigDecimal totalRevenue) {
+        this.totalOrders = totalOrders;
+        this.totalCustomers = totalCustomers;
+        this.totalProducts = totalProducts;
+        this.totalChannels = totalChannels;
         this.totalRevenue = totalRevenue;
     }
 
-    // Getters and Setters
-    public long getProductCount() {
-        return productCount;
+    public long getTotalOrders() {
+        return totalOrders;
     }
 
-    public void setProductCount(long productCount) {
-        this.productCount = productCount;
+    public void setTotalOrders(long totalOrders) {
+        this.totalOrders = totalOrders;
     }
 
-    public long getOrderCount() {
-        return orderCount;
+    public long getTotalCustomers() {
+        return totalCustomers;
     }
 
-    public void setOrderCount(long orderCount) {
-        this.orderCount = orderCount;
+    public void setTotalCustomers(long totalCustomers) {
+        this.totalCustomers = totalCustomers;
     }
 
-    public long getCustomerCount() {
-        return customerCount;
+    public long getTotalProducts() {
+        return totalProducts;
     }
 
-    public void setCustomerCount(long customerCount) {
-        this.customerCount = customerCount;
+    public void setTotalProducts(long totalProducts) {
+        this.totalProducts = totalProducts;
     }
 
-    public long getChannelCount() {
-        return channelCount;
+    public long getTotalChannels() {
+        return totalChannels;
     }
 
-    public void setChannelCount(long channelCount) {
-        this.channelCount = channelCount;
+    public void setTotalChannels(long totalChannels) {
+        this.totalChannels = totalChannels;
     }
 
-    public double getTotalRevenue() {
+    public BigDecimal getTotalRevenue() {
         return totalRevenue;
     }
 
-    public void setTotalRevenue(double totalRevenue) {
+    public void setTotalRevenue(BigDecimal totalRevenue) {
         this.totalRevenue = totalRevenue;
     }
 }
