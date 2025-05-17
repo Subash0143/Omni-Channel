@@ -24,6 +24,7 @@ public class ChannelController {
         return channelService.findAll();
     }
 
+
     @PutMapping("/{id}")
     public Channel update(@PathVariable Long id, @RequestBody Channel channel) {
         return channelService.update(id, channel);

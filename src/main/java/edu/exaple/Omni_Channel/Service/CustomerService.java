@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerService {
@@ -23,8 +24,8 @@ public class CustomerService {
     public Customer update(Long id, Customer updatedCustomer) {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-        customer.setName(updatedCustomer.getName());
-        customer.setEmail(updatedCustomer.getEmail());
+        customer.setUsername(updatedCustomer.getUsername());
+        customer.setPassword(updatedCustomer.getPassword());
         return customerRepository.save(customer);
     }
 

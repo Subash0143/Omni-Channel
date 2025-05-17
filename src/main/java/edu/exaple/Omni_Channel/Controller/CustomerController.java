@@ -7,8 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@CrossOrigin ("*")
 @RequestMapping("/customers")
 public class CustomerController {
 
@@ -24,6 +26,7 @@ public class CustomerController {
     public List<Customer> getAllCustomers() {
         return customerService.findAll();
     }
+
 
     @PutMapping("/{id}")
     public Customer updateCustomer(@PathVariable Long id, @RequestBody Customer updatedCustomer) {
